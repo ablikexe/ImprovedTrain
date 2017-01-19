@@ -50,39 +50,61 @@
 	</head>
 	<body>
 
-		<h1 id="counter">time</h1>
+		<h1 id="counter" style = "display:none">time</h1>
+
 		<br>
-		<p id="play">play</p>
-		<br>
-		
-		<table id="tabelaziwerzat" class="smalltext"></table>
+		<h1 id="play">Play</h1>
+		<br>		
+		<table id="tabelaziwerzat" class="smalltext" style = "display:none"></table>
 
 
 		<script>
 
-
+		level = 2
 		
-		
-		document.getElementById("play").onclick = function() {clickingPlay()};
+		document.getElementById("play").onclick = function() {
+			clickingPlay();
+		}
 
 		function clickingPlay() {		
-		    countdown(thisTime);
-		    document.getElementById("play").onclick = function() {clickingStop()};
-		    document.getElementById("play").innerHTML = "stop";
+		    countdown(level**2);
+		    createTable(level);
+		    //document.getElementById("play").onclick = function() {clickingStop()};
+		    document.getElementById("play").style.display = "none";
+		    document.getElementById("counter").style.display = "block";
+		    document.getElementById("tabelaziwerzat").style.display = "";
 		}
 
 		function clickingStop() {		
-		    document.getElementById("play").innerHTML = "click again";
+		    document.getElementById("play").innerHTML = "już nie klikaj bo to nic nie da";
 		}
 
-
-
-		myarray = [];
 		tz=document.getElementById("tabelaziwerzat");
+
+//tworzymy alerty
+  		function fajnyAlert(){
+  			//alert("zajebiście!");
+  			level++;
+  			clearInterval(myTimer);
+  			clickingPlay();
+  			document.getElementById("play").innerHTML = "play";
+
+
+  		}
+
+
+  		function niefajnyAlert(){
+  			//alert("nie jest dobrze!");
+  		}
+
+		
 
 
 //tworzymy tabelę
-		size = 6
+		function createTable(size){
+		tz.innerHTML = "";
+		thisTime = size**2;
+		myarray = [];
 		n=1
 
 		p=1;
@@ -98,13 +120,13 @@
 
 
 		function shuffleArray(myarray) {
-	    for (var ai = myarray.length - 1; ai > 0; ai--) {
-	        var aj = Math.floor(Math.random() * (ai + 1));
-	        var temp = myarray[ai];
-	        myarray[ai] = myarray[aj];
-	        myarray[aj] = temp;
-	    }
-    	return myarray;
+		    for (var ai = myarray.length - 1; ai > 0; ai--) {
+		        var aj = Math.floor(Math.random() * (ai + 1));
+		        var temp = myarray[ai];
+		        myarray[ai] = myarray[aj];
+		        myarray[aj] = temp;
+		    	}
+	    	return myarray;
 		}
 
 		shuffleArray(myarray); 
@@ -134,19 +156,17 @@
   		tz.innerHTML += k;
 
   		comabycklikniete = 1;
-
-
-  		function fajnyAlert(){
-  			alert("zajebiście!");
   		}
 
-  		function niefajnyAlert(){
-  			alert("nie jest dobrze!");
-  		}
+  		
+
+
+
+
+
+
 
 //timer
-
-
 		function countdown(minutes) {
 		    var seconds = 60;
 		    var mins = minutes
@@ -158,22 +178,25 @@
 		        seconds--;
 		        counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
 		        if( seconds > 0 ) {
-		            setTimeout(tick, 10);
+		            
+
 		        } else {
 		            if(mins > 1){
-		                countdown(mins-1);           
+		            	clearInterval(myTimer);
+		                countdown(mins-1);
+
 		            }
 		            else{
+		            	
+		            	clearInterval(myTimer);
 		            	setTimeout(niefajnyAlert, 100);
 		            }
 		        }
 		    }
-		    tick();
-
-
+		    myTimer = setInterval(tick, 10);
 		}
 
-		thisTime = size**2;
+		
 
 		
 
