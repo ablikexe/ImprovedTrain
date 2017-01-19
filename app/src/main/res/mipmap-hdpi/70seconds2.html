@@ -1,0 +1,201 @@
+<html>
+	<head>
+	<style>
+
+
+		body{
+			text-align: center;
+			background: #0F2D40;
+			font-family: sans-serif;
+			font-weight: 100;
+		}
+
+		h1{
+		  color: #D8F2F0;
+		  font-weight: 200;
+		  font-size: 40px;
+		  margin: 20px 0px 5px;
+		}
+
+		table#tabelaziwerzat{
+			
+			font-family: sans-serif;
+			color: #D8F2F0;
+			display: inline-block;
+			background: #194759;
+			font-weight: 100;
+			text-align: center;
+			font-size: 30px;
+			padding: 30px;
+			border-radius: 30px; 			
+		}
+
+		.smalltext{
+			padding-top: 5px;
+			font-size: 16px;
+			color: #0F2D40;
+		}
+		
+		th, td {		    
+		    width: 100; 
+		    height: 100;
+		    background: #296B73;
+		}
+
+
+
+
+	</style>
+
+	</head>
+	<body>
+
+		<h1 id="counter">time</h1>
+		<br>
+		<p id="play">play</p>
+		<br>
+		
+		<table id="tabelaziwerzat" class="smalltext"></table>
+
+
+		<script>
+
+
+		
+		
+		document.getElementById("play").onclick = function() {clickingPlay()};
+
+		function clickingPlay() {		
+		    countdown(thisTime);
+		    document.getElementById("play").onclick = function() {clickingStop()};
+		    document.getElementById("play").innerHTML = "stop";
+		}
+
+		function clickingStop() {		
+		    document.getElementById("play").innerHTML = "click again";
+		}
+
+
+
+		myarray = [];
+		tz=document.getElementById("tabelaziwerzat");
+
+
+//tworzymy tabelę
+		size = 6
+		n=1
+
+		p=1;
+		while (p<size){
+				r=1; 
+				while (r<size){ 
+				myarray.push(n);
+				n++;
+				r++; 
+				} 
+			p++;
+		}   
+
+
+		function shuffleArray(myarray) {
+	    for (var ai = myarray.length - 1; ai > 0; ai--) {
+	        var aj = Math.floor(Math.random() * (ai + 1));
+	        var temp = myarray[ai];
+	        myarray[ai] = myarray[aj];
+	        myarray[aj] = temp;
+	    }
+    	return myarray;
+		}
+
+		shuffleArray(myarray); 
+
+		na=1;
+		k = "";
+
+		j=1;
+		while (j<size){
+			k+= "<tr>";
+				i=1; 
+				while (i<size){ 
+				k+= " <td onclick='myFunction(this)'> ";
+											
+				k+=myarray[na-1];
+				na++;
+
+				k+= "</td> "; 
+				i++; 
+
+				} 
+				
+			j++;
+
+			k+= "</tr>";
+		}   
+  		tz.innerHTML += k;
+
+  		comabycklikniete = 1;
+
+
+  		function fajnyAlert(){
+  			alert("zajebiście!");
+  		}
+
+  		function niefajnyAlert(){
+  			alert("nie jest dobrze!");
+  		}
+
+//timer
+
+
+		function countdown(minutes) {
+		    var seconds = 60;
+		    var mins = minutes
+
+		    function tick() {
+       
+		        var counter = document.getElementById("counter");
+		        var current_minutes = mins-1
+		        seconds--;
+		        counter.innerHTML = current_minutes.toString() + ":" + (seconds < 10 ? "0" : "") + String(seconds);
+		        if( seconds > 0 ) {
+		            setTimeout(tick, 10);
+		        } else {
+		            if(mins > 1){
+		                countdown(mins-1);           
+		            }
+		            else{
+		            	setTimeout(niefajnyAlert, 100);
+		            }
+		        }
+		    }
+		    tick();
+
+
+		}
+
+		thisTime = size**2;
+
+		
+
+
+//sprawdzamy czy gracz kliknął właściwy przycisk/numer
+		function myFunction(cell) {
+			console.log("comabycklikniete: ", comabycklikniete, ", cell.innerHTML: ", cell.innerHTML);
+			if (cell.innerHTML == comabycklikniete) {
+				cell.style.backgroundColor = "#194759";
+    			cell.style.fontSize = "small";
+    			comabycklikniete++
+			}else{
+				setTimeout(niefajnyAlert, 100);
+			};
+			if(comabycklikniete>=n){
+				setTimeout(fajnyAlert, 100);
+			}
+		}
+
+		
+	
+			
+		</script>
+	</body>
+</html>
