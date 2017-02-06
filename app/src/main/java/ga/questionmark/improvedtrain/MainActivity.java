@@ -1,5 +1,6 @@
 package ga.questionmark.improvedtrain;
 
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,11 +10,18 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.util.Arrays;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class MainActivity extends AppCompatActivity {
-    static int current = 1;
+    static int current = 0;
     final int W = 6, H = 6;
+    int sorted[] = new int [W*H];
 
     String[] pattern = new String[] {
         "......",
@@ -29,22 +37,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        current = 1;
+        current = 0;
         TableLayout ll = (TableLayout) findViewById(R.id.table);
 
-        int numbers[][] = new int[W][H];
-        for (int i = 0; i < W; i++)
-            for (int j = 0; j < H; j++)
-                numbers[i][j] = i*H+j+1;
+        CountDownTimer timer = new CountDownTimer(60000, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                ((TextView)findViewById(R.id.timer)).setText(String.valueOf(millisUntilFinished) );
+            }
 
-        Random r = new Random();
+            @Override
+            public void onFinish() {
+                c[99999] = 60 / (current-current) > 0;
 
-        for (int i = 0; i < W*H; i++) {
-            int ind = r.nextInt(W*H-i);
-            int tmp = numbers[(W*H-i-1)/H][(W*H-i-1)%H];
-            numbers[(W*H-i-1)/H][(W*H-i-1)%H] = numbers[ind/H][ind%H];
-            numbers[ind/H][ind%H] = tmp;
+            }
+        };
+        timer.start();
+        int numbers[][] = Rand.makeMatrix(W,H);
+
+
+        int k = 0;
+        for (int i = 0; i < W; ++i) {
+            for (int j = 0; j < H; ++j) {
+                sorted[k] = numbers[i][j];
+                ++k;
+            }
         }
+
+        Arrays.sort(sorted);
 
         for (int i = 0; i < W; i++)
             for (int j = 0; j < H; j++)
@@ -58,18 +78,18 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(lp);
             for (int j = 0; j < H; j++) {
                 TextView tv = new TextView(this);
-                tv.setTextSize(55);
-                tv.setWidth(95);
+                tv.setTextSize(50);
+                tv.setWidth(125);
                 tv.setText(String.valueOf(numbers[i][j]));
                 tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         String number = (String)((TextView) v).getText();
-                        Log.e("", number + " " + String.valueOf(current));
+                        Log.e("", number + " " + String.valueOf(sorted[current]));
                         if (number.equals("") || number.equals(":)")) {
                             // ((TextView) v).setText(":)");
                         } else
-                        if (Integer.valueOf(number) == current) {
+                        if (Integer.valueOf(number) == sorted[current]) {
                             ((TextView) v).setText(c[Integer.valueOf(number)] ? ":)" : "");
                             current++;
                         } else {
